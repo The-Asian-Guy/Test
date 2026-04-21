@@ -11,12 +11,15 @@ $(document).ready(function () {
 
     // Function to search for books from the Google Books API
     function searchBooks(query) {
-        var url = 'https://www.googleapis.com/books/v1/volumes?q=' + query;
+        // Use your own API key here
+        var apiKey = 'YOUR_API_KEY';  // Replace with your actual API key
+        var url = 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&key=' + apiKey;
 
         // Clear previous results
         $('#results').empty();
 
         $.get(url, function (data) {
+            console.log('API Response:', data); // Log the response to the console
             if (data.items && data.items.length > 0) {
                 // Loop through the book items and display them
                 data.items.forEach(function (book) {
@@ -38,14 +41,17 @@ $(document).ready(function () {
             } else {
                 $('#results').append('<p>No books found. Try a different search.</p>');
             }
-        }).fail(function () {
+        }).fail(function (xhr, textStatus, errorThrown) {
+            // Log the error to the console to debug
+            console.error('Error retrieving books:', xhr, textStatus, errorThrown);
             alert('Error retrieving books. Please try again.');
         });
     }
 
     // Function to save book to My Bookshelf (local storage)
     function addBookToBookshelf(bookId) {
-        var url = 'https://www.googleapis.com/books/v1/volumes/' + bookId;
+        var apiKey = 'YOUR_API_KEY';  // Replace with your actual API key
+        var url = 'https://www.googleapis.com/books/v1/volumes/' + bookId + '?key=' + apiKey;
 
         $.get(url, function (data) {
             var book = {
@@ -70,7 +76,9 @@ $(document).ready(function () {
             } else {
                 alert('This book is already in your bookshelf.');
             }
-        }).fail(function () {
+        }).fail(function (xhr, textStatus, errorThrown) {
+            // Log the error to the console to debug
+            console.error('Error retrieving book details:', xhr, textStatus, errorThrown);
             alert('Error retrieving book details. Please try again.');
         });
     }
