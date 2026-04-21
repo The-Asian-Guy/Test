@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Search</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="nav">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="bookshelf.html">My Bookshelf</a></li>
-        </ul>
-    </div>
-    
-    <h1>Search for Books</h1>
-    <input type="text" id="search-query" placeholder="Search for a book...">
-    <button id="search-btn">Search</button>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="bookshelf.html">My Bookshelf</a>
+        </nav>
+    </header>
 
-    <div id="results"></div>
+    <main>
+        <h1>Search for Books</h1>
+        <div>
+            <input type="text" id="searchQuery" placeholder="Enter search term">
+            <button id="searchButton">Search</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="pagination"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Your Name</p>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
