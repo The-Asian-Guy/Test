@@ -63,4 +63,33 @@ $(document).ready(function () {
             }
         });
     }
+    // Check if we're on the Book Details page
+if (window.location.pathname.includes('book-details.html')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('id');
+    
+    if (bookId) {
+        fetchBookDetails(bookId);
+    }
+
+    // Function to fetch book details
+    function fetchBookDetails(bookId) {
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+        
+        $.get(apiUrl, function (data) {
+            const book = data.volumeInfo;
+            const title = book.title || 'No title available';
+            const description = book.description || 'No description available.';
+            const authors = book.authors ? book.authors.join(', ') : 'No authors available.';
+            const coverImage = book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/128x200';
+
+            $('#book-details').html(`
+                <img src="${coverImage}" alt="${title}" class="book-cover">
+                <h2>${title}</h2>
+                <p><strong>Authors:</strong> ${authors}</p>
+                <p><strong>Description:</strong> ${description}</p>
+            `);
+        });
+    }
+}
 });
