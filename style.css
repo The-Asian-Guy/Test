@@ -1,45 +1,51 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 header {
     background-color: #333;
+    color: #fff;
     padding: 10px;
-    text-align: center;
 }
 
-header a {
-    color: white;
-    margin: 0 15px;
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+nav ul li a {
+    color: #fff;
     text-decoration: none;
 }
 
-main {
+#book-search-container, #bookshelf-container, #book-details-container {
     padding: 20px;
 }
 
-#searchQuery {
-    padding: 5px;
-    width: 200px;
-}
-
-#searchButton {
-    padding: 5px 10px;
-}
-
-#results {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .book {
+    display: inline-block;
+    width: 120px;
     margin: 10px;
-    width: 150px;
     text-align: center;
 }
 
+.book img {
+    width: 100px;
+    height: 150px;
+}
+
+#pagination {
+    margin-top: 20px;
+}
+
 #pagination button {
+    padding: 10px;
     margin: 5px;
-    padding: 5px 10px;
 }
