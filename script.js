@@ -1,53 +1,68 @@
 $(document).ready(function () {
-    const apiBaseUrl = 'https://www.googleapis.com/books/v1/volumes';
-    
-    $('#searchButton').click(function () {
-        const query = $('#searchQuery').val().trim();
+    // Search functionality for Home page
+    $('#search-btn').on('click', function () {
+        var query = $('#search-query').val();
         if (query) {
-            searchBooks(query, 1); // Start search with page 1
+            searchBooks(query);
         }
     });
 
-    function searchBooks(query, page) {
-        const url = `${apiBaseUrl}?q=${encodeURIComponent(query)}&startIndex=${(page - 1) * 10}&maxResults=10`;
-        
-        $.getJSON(url, function (data) {
-            displayResults(data);
-            displayPagination(data, query);
-        });
-    }
+    function searchBooks(query) {
+        var url = 'https://www.googleapis.com/books/v1/volumes?q=' + query;
 
-    function displayResults(data) {
-        const resultsDiv = $('#results');
-        resultsDiv.empty();
-
-        data.items.forEach(item => {
-            const book = item.volumeInfo;
-            const bookDiv = $(`
-                <div class="book">
-                    <a href="bookDetails.html?id=${item.id}">
-                        <img src="${book.imageLinks?.smallThumbnail}" alt="${book.title}" />
-                        <h3>${book.title}</h3>
-                    </a>
-                </div>
-            `);
-            resultsDiv.append(bookDiv);
-        });
-    }
-
-    function displayPagination(data, query) {
-        const paginationDiv = $('#pagination');
-        paginationDiv.empty();
-        
-        const totalItems = data.totalItems;
-        const totalPages = Math.ceil(totalItems / 10);
-        
-        for (let i = 1; i <= totalPages; i++) {
-            const pageLink = $(`<button>${i}</button>`);
-            pageLink.click(function () {
-                searchBooks(query, i);
+        $.get(url, function (data) {
+            var results = data.items;
+            $('#results').empty();
+            results.forEach(function (book) {
+                var bookHtml = `
+                    <div class="book">
+                        <img src="${book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192'}" alt="${book.volumeInfo.title}">
+                        <p><strong>${book.volumeInfo.title}</strong></p>
+                        <button class="add-to-bookshelf" data-id="${book.id}">Add to Bookshelf</button>
+                    </div>
+                `;
+                $('#results').append(bookHtml);
             });
-            paginationDiv.append(pageLink);
-        }
+
+            // Add book to bookshelf when button is clicked
+            $('.add-to-bookshelf').on('click', function () {
+                var bookId = $(this).data('id');
+                addBookToBookshelf(bookId);
+            });
+        });
+    }
+
+    // Save book to My Bookshelf (local storage)
+    function addBookToBookshelf(bookId) {
+        var url = 'https://www.googleapis.com/books/v1/volumes/' + bookId;
+
+        $.get(url, function (data) {
+            var book = {
+                id: data.id,
+                title: data.volumeInfo.title,
+                author: data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown',
+                image: data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192'
+            };
+
+            var bookshelf = JSON.parse(localStorage.getItem('bookshelf')) || [];
+            bookshelf.push(book);
+            localStorage.setItem('bookshelf', JSON.stringify(bookshelf));
+
+            alert('Book added to your bookshelf!');
+        });
+    }
+
+    // Display books on My Bookshelf page
+    if (window.location.pathname.includes('bookshelf.html')) {
+        var bookshelf = JSON.parse(localStorage.getItem('bookshelf')) || [];
+        bookshelf.forEach(function (book) {
+            var bookHtml = `
+                <div class="book">
+                    <img src="${book.image}" alt="${book.title}">
+                    <p><strong>${book.title}</strong><br>by ${book.author}</p>
+                </div>
+            `;
+            $('#bookshelf').append(bookHtml);
+        });
     }
 });
