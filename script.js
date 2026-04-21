@@ -33,7 +33,7 @@ $(document).ready(function () {
         const maxResults = 10; // number of results per page
         const startIndex = (page - 1) * maxResults;
         
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${maxResults}`;
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${maxResults}&key=AIzaSyB-S0erO-RVAUpnLYLJGO1OBpEVDc2c5yo`;
         
         $.get(apiUrl, function (data) {
             totalPages = Math.ceil(data.totalItems / maxResults);
