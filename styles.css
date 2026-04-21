@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+header a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+#searchQuery {
+    padding: 5px;
+    width: 200px;
+}
+
+#searchButton {
+    padding: 5px 10px;
+}
+
+#results {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.book {
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+}
+
+#pagination button {
+    margin: 5px;
+    padding: 5px 10px;
+}
