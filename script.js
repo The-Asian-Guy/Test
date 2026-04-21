@@ -1,103 +1,53 @@
 $(document).ready(function () {
-    // Search functionality for Home page
-    $('#search-btn').on('click', function () {
-        var query = $('#search-query').val().trim(); // Ensure the query is trimmed of spaces
+    const apiBaseUrl = 'https://www.googleapis.com/books/v1/volumes';
+    
+    $('#searchButton').click(function () {
+        const query = $('#searchQuery').val().trim();
         if (query) {
-            searchBooks(query);
-        } else {
-            alert('Please enter a search term.');
+            searchBooks(query, 1); // Start search with page 1
         }
     });
 
-    // Function to search for books from the Google Books API
-    function searchBooks(query) {
-        // Use your own API key here
-        var apiKey = 'YOUR_API_KEY';  // Replace with your actual API key
-        var url = 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&key=' + apiKey;
-
-        // Clear previous results
-        $('#results').empty();
-
-        $.get(url, function (data) {
-            console.log('API Response:', data); // Log the response to the console
-            if (data.items && data.items.length > 0) {
-                // Loop through the book items and display them
-                data.items.forEach(function (book) {
-                    var bookHtml = `
-                        <div class="book">
-                            <img src="${book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192'}" alt="${book.volumeInfo.title}">
-                            <p><strong>${book.volumeInfo.title}</strong></p>
-                            <button class="add-to-bookshelf" data-id="${book.id}">Add to Bookshelf</button>
-                        </div>
-                    `;
-                    $('#results').append(bookHtml);
-                });
-
-                // Add book to bookshelf when the button is clicked
-                $('.add-to-bookshelf').on('click', function () {
-                    var bookId = $(this).data('id');
-                    addBookToBookshelf(bookId);
-                });
-            } else {
-                $('#results').append('<p>No books found. Try a different search.</p>');
-            }
-        }).fail(function (xhr, textStatus, errorThrown) {
-            // Log the error to the console to debug
-            console.error('Error retrieving books:', xhr, textStatus, errorThrown);
-            alert('Error retrieving books. Please try again.');
+    function searchBooks(query, page) {
+        const url = `${apiBaseUrl}?q=${encodeURIComponent(query)}&startIndex=${(page - 1) * 10}&maxResults=10`;
+        
+        $.getJSON(url, function (data) {
+            displayResults(data);
+            displayPagination(data, query);
         });
     }
 
-    // Function to save book to My Bookshelf (local storage)
-    function addBookToBookshelf(bookId) {
-        var apiKey = 'YOUR_API_KEY';  // Replace with your actual API key
-        var url = 'https://www.googleapis.com/books/v1/volumes/' + bookId + '?key=' + apiKey;
+    function displayResults(data) {
+        const resultsDiv = $('#results');
+        resultsDiv.empty();
 
-        $.get(url, function (data) {
-            var book = {
-                id: data.id,
-                title: data.volumeInfo.title,
-                author: data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown',
-                image: data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192'
-            };
-
-            // Load the bookshelf from localStorage (or initialize it as an empty array)
-            var bookshelf = JSON.parse(localStorage.getItem('bookshelf')) || [];
-
-            // Check if the book is already in the bookshelf
-            var isBookInBookshelf = bookshelf.some(function (savedBook) {
-                return savedBook.id === book.id;
-            });
-
-            if (!isBookInBookshelf) {
-                bookshelf.push(book);
-                localStorage.setItem('bookshelf', JSON.stringify(bookshelf));
-                alert('Book added to your bookshelf!');
-            } else {
-                alert('This book is already in your bookshelf.');
-            }
-        }).fail(function (xhr, textStatus, errorThrown) {
-            // Log the error to the console to debug
-            console.error('Error retrieving book details:', xhr, textStatus, errorThrown);
-            alert('Error retrieving book details. Please try again.');
+        data.items.forEach(item => {
+            const book = item.volumeInfo;
+            const bookDiv = $(`
+                <div class="book">
+                    <a href="bookDetails.html?id=${item.id}">
+                        <img src="${book.imageLinks?.smallThumbnail}" alt="${book.title}" />
+                        <h3>${book.title}</h3>
+                    </a>
+                </div>
+            `);
+            resultsDiv.append(bookDiv);
         });
     }
 
-    // Display saved books on My Bookshelf page
-    if (window.location.pathname.includes('bookshelf.html')) {
-        var bookshelf = JSON.parse(localStorage.getItem('bookshelf')) || [];
-        if (bookshelf.length === 0) {
-            $('#bookshelf').html('<p>Your bookshelf is empty. Add books from the Home page.</p>');
-        } else {
-            bookshelf.forEach(function (book) {
-                var bookHtml = `
-                    <div class="book">
-                        <img src="${book.image}" alt="${book.title}">
-                        <p><strong>${book.title}</strong><br>by ${book.author}</p>
-                    </div>
-                `;
-                $('#bookshelf').append(bookHtml);
+    function displayPagination(data, query) {
+        const paginationDiv = $('#pagination');
+        paginationDiv.empty();
+        
+        const totalItems = data.totalItems;
+        const totalPages = Math.ceil(totalItems / 10);
+        
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLink = $(`<button>${i}</button>`);
+            pageLink.click(function () {
+                searchBooks(query, i);
             });
+            paginationDiv.append(pageLink);
         }
     }
 });
