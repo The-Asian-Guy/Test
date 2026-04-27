@@ -1,22 +1,27 @@
-$(document).ready(function () {
-    const bookshelfId = 'YOUR_PUBLIC_SHELF_ID'; // Replace with your bookshelf ID
-    const apiBaseUrl = `https://www.googleapis.com/books/v1/mylibrary/bookshelves/${bookshelfId}/volumes`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookshelf</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bookDetails.html">Book Search</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    $.getJSON(apiBaseUrl, function (data) {
-        const bookshelfDiv = $('#bookshelf');
-        bookshelfDiv.empty();
+    <div id="bookshelf-container">
+        <h1>My Bookshelf</h1>
+        <div id="bookshelf"></div>
+    </div>
 
-        data.items.forEach(item => {
-            const book = item.volumeInfo;
-            const bookDiv = $(`
-                <div class="book">
-                    <a href="bookDetails.html?id=${item.id}">
-                        <img src="${book.imageLinks?.smallThumbnail}" alt="${book.title}" />
-                        <h3>${book.title}</h3>
-                    </a>
-                </div>
-            `);
-            bookshelfDiv.append(bookDiv);
-        });
-    });
-});
+    <script src="bookshelf.js"></script>
+</body>
+</html>
