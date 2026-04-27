@@ -33,7 +33,7 @@ $(document).ready(function () {
         const maxResults = 10; // number of results per page
         const startIndex = (page - 1) * maxResults;
         
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${maxResults};
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${maxResults}`;
         
         $.get(apiUrl, function (data) {
             totalPages = Math.ceil(data.totalItems / maxResults);
@@ -45,7 +45,7 @@ $(document).ready(function () {
             if (data.items) {
                 data.items.forEach(item => {
                     const book = item.volumeInfo;
-                    const bookLink = `book-details.html?id=${item.id}';
+                    const bookLink = `book-details.html?id=${item.id}`;
                     const bookCover = book.imageLinks ? book.imageLinks.smallThumbnail : 'https://via.placeholder.com/128x200';
                     const title = book.title || 'No title available';
 
