@@ -6,8 +6,57 @@
     <title>Book Details</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Simple styling for Book Details page */
+        #book-details-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #book-info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        #book-cover {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+        #book-info h2 {
+            font-size: 2em;
+            margin-top: 0;
+        }
+        #book-description {
+            margin-top: 20px;
+        }
+        .book-details-label {
+            font-weight: bold;
+        }
+        .book-details-content {
+            margin-top: 5px;
+        }
+        .price {
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        #back-button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #back-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <nav>
             <ul>
@@ -20,16 +69,19 @@
     <div id="book-details-container">
         <h1>Book Details</h1>
 
-        <!-- Book cover, title, and description will be dynamically inserted here -->
+        <!-- Book Information will be dynamically populated here -->
         <div id="book-info">
             <img id="book-cover" src="" alt="Book cover">
-            <h2 id="book-title"></h2>
-            <p id="book-authors"></p>
-            <p id="book-description"></p>
+            <div id="book-text">
+                <h2 id="book-title"></h2>
+                <p id="book-authors"></p>
+                <p id="book-publisher"></p>
+                <p id="book-description"></p>
+                <p id="book-price" class="price"></p>
+            </div>
         </div>
 
-        <!-- Back to search button -->
-        <button onclick="window.history.back()">Back to Search</button>
+        <button id="back-button" onclick="window.history.back()">Back to Search</button>
     </div>
 
     <script src="details.js"></script>
