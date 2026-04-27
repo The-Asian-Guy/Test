@@ -1,20 +1,33 @@
 $(document).ready(function () {
-    const bookId = new URLSearchParams(window.location.search).get('id');
-    const apiBaseUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+    // Get the book ID from the URL query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('id');
 
-    $.getJSON(apiBaseUrl, function (data) {
+    // If no book ID is found, display an error message
+    if (!bookId) {
+        $('#book-info').html('<p>No book details found.</p>');
+        return;
+    }
+
+    // Construct the API URL for the book details
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+
+    // Fetch book details from Google Books API
+    $.get(apiUrl, function (data) {
         const book = data.volumeInfo;
-        const bookDetailsDiv = $('#bookDetails');
 
-        const detailsHtml = `
-            <h1>${book.title}</h1>
-            <h2>By ${book.authors?.join(', ')}</h2>
-            <p><strong>Publisher:</strong> ${book.publisher}</p>
-            <p><strong>Description:</strong> ${book.description}</p>
-            <p><strong>Price:</strong> ${book.saleInfo?.listPrice?.amount || 'Not available'}</p>
-            <img src="${book.imageLinks?.thumbnail}" alt="${book.title}" />
-        `;
-        
-        bookDetailsDiv.html(detailsHtml);
+        // Book details
+        const title = book.title || 'No title available';
+        const authors = book.authors ? book.authors.join(', ') : 'No authors available';
+        const description = book.description || 'No description available.';
+        const coverImage = book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/128x200';
+
+        // Populate the page with book details
+        $('#book-title').text(title);
+        $('#book-authors').html(`<strong>Authors:</strong> ${authors}`);
+        $('#book-description').html(`<strong>Description:</strong> ${description}`);
+        $('#book-cover').attr('src', coverImage);
+    }).fail(function () {
+        $('#book-info').html('<p>Error fetching book details. Please try again later.</p>');
     });
 });
