@@ -45,7 +45,7 @@ $(document).ready(function () {
             if (data.items) {
                 data.items.forEach(item => {
                     const book = item.volumeInfo;
-                    const bookLink = `book-details.html?id=${item.id}`;
+                    const bookLink = `book-details.html?id=${item.id}';
                     const bookCover = book.imageLinks ? book.imageLinks.smallThumbnail : 'https://via.placeholder.com/128x200';
                     const title = book.title || 'No title available';
 
