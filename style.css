@@ -1,51 +1,63 @@
+/* Basic styling for the pages */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
 }
 
 header {
     background-color: #333;
-    color: #fff;
+    color: white;
     padding: 10px;
+    text-align: center;
 }
 
-nav ul {
+header nav ul {
     list-style: none;
     padding: 0;
 }
 
-nav ul li {
+header nav ul li {
     display: inline;
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
-nav ul li a {
-    color: #fff;
+header nav ul li a {
+    color: white;
     text-decoration: none;
 }
 
-#book-search-container, #bookshelf-container, #book-details-container {
+#book-search-container, #book-details-container, #bookshelf-container {
     padding: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .book {
     display: inline-block;
-    width: 120px;
+    width: 200px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 10px;
     text-align: center;
 }
 
 .book img {
-    width: 100px;
-    height: 150px;
+    max-width: 100%;
+    height: auto;
 }
 
-#pagination {
-    margin-top: 20px;
+.book h3 {
+    font-size: 1.1em;
+    color: #333;
 }
 
-#pagination button {
-    padding: 10px;
-    margin: 5px;
+.book p {
+    font-size: 0.9em;
+    color: #666;
 }
