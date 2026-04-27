@@ -16,18 +16,26 @@
             </ul>
         </nav>
     </header>
+    
     <div id="book-search-container">
         <h1>Book Search</h1>
-        <input type="text" id="search-query" placeholder="Enter book title, author, etc.">
+        
+        <!-- Search box and button -->
+        <label for="search-query">Enter book title, author, etc.:</label>
+        <input type="text" id="search-query" placeholder="Search for books">
         <button id="search-button">Search</button>
-        
+
+        <!-- Results will appear here -->
         <div id="book-results"></div>
-        
-        <div id="pagination">
-            <button id="prev-page" disabled>Previous</button>
-            <span id="page-number">Page: 1</span>
-            <button id="next-page">Next</button>
-        </div>
+
+        <!-- Page selection dropdown -->
+        <label for="page-dropdown">Page:</label>
+        <select id="page-dropdown">
+            <!-- Options will be dynamically populated by jQuery -->
+        </select>
+
+        <!-- Placeholder for displaying current page number -->
+        <span id="page-number">Page: 1</span>
     </div>
     
     <script src="script.js"></script>
