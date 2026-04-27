@@ -1,48 +1,36 @@
 $(document).ready(function () {
-    let currentPage = 1;
-    let totalPages = 1;
-    
-    // Handle search button click
+    let currentPage = 1;  // Track the current page
+    const maxResults = 10;  // Number of results per page
+    let totalPages = 1;  // Total pages (based on total items from API)
+
+    // Handle Search button click
     $('#search-button').click(function () {
-        let query = $('#search-query').val();
+        const query = $('#search-query').val();
         if (query) {
+            currentPage = 1; // Reset to the first page on new search
             searchBooks(query, currentPage);
         }
     });
 
-    // Handle next page click
-    $('#next-page').click(function () {
-        if (currentPage < totalPages) {
-            currentPage++;
-            $('#page-number').text(`Page: ${currentPage}`);
-            searchBooks($('#search-query').val(), currentPage);
-        }
+    // Handle page change (via dropdown selection)
+    $('#page-dropdown').change(function () {
+        currentPage = parseInt($(this).val(), 10);
+        searchBooks($('#search-query').val(), currentPage);
     });
 
-    // Handle previous page click
-    $('#prev-page').click(function () {
-        if (currentPage > 1) {
-            currentPage--;
-            $('#page-number').text(`Page: ${currentPage}`);
-            searchBooks($('#search-query').val(), currentPage);
-        }
-    });
-
-    // Function to search books via Google Books API
+    // Function to search books using the Google Books API
     function searchBooks(query, page) {
-        const maxResults = 10; // number of results per page
         const startIndex = (page - 1) * maxResults;
-        
         const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${maxResults}`;
-        
+
         $.get(apiUrl, function (data) {
             totalPages = Math.ceil(data.totalItems / maxResults);
-            $('#next-page').prop('disabled', currentPage >= totalPages);
-            $('#prev-page').prop('disabled', currentPage <= 1);
+            updatePageDropdown();
 
-            $('#book-results').empty();
-            
+            $('#book-results').empty();  // Clear previous results
+
             if (data.items) {
+                // Display the search results
                 data.items.forEach(item => {
                     const book = item.volumeInfo;
                     const bookLink = `book-details.html?id=${item.id}`;
@@ -63,33 +51,18 @@ $(document).ready(function () {
             }
         });
     }
-    // Check if we're on the Book Details page
-if (window.location.pathname.includes('book-details.html')) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookId = urlParams.get('id');
-    
-    if (bookId) {
-        fetchBookDetails(bookId);
-    }
 
-    // Function to fetch book details
-    function fetchBookDetails(bookId) {
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
-        
-        $.get(apiUrl, function (data) {
-            const book = data.volumeInfo;
-            const title = book.title || 'No title available';
-            const description = book.description || 'No description available.';
-            const authors = book.authors ? book.authors.join(', ') : 'No authors available.';
-            const coverImage = book.imageLinks ? book.imageLinks.thumbnail : 'https://via.placeholder.com/128x200';
+    // Function to update the page dropdown options based on total pages
+    function updatePageDropdown() {
+        const $dropdown = $('#page-dropdown');
+        $dropdown.empty();  // Clear any existing options
 
-            $('#book-details').html(`
-                <img src="${coverImage}" alt="${title}" class="book-cover">
-                <h2>${title}</h2>
-                <p><strong>Authors:</strong> ${authors}</p>
-                <p><strong>Description:</strong> ${description}</p>
-            `);
-        });
+        // Add options for each page
+        for (let i = 1; i <= totalPages; i++) {
+            $dropdown.append(new Option(`Page ${i}`, i));
+        }
+
+        // Set the current page as selected
+        $dropdown.val(currentPage);
     }
-}
 });
